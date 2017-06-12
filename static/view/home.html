@@ -1,0 +1,12 @@
+<header>
+    <h1>欢迎来到这个页面</h1>
+    <ul>
+        <li ng-repeat="item in data" ng-click="fn()" ng-model="num">
+            <a ui-sref="list({ID:item.count})">{{item.title}}</a>
+        </li>
+        <!--<p>浏览 <span>{{num}}</span></p>-->
+    </ul>
+    <footer>
+    </footer>
+
+</header>

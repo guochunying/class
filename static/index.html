@@ -36,24 +36,26 @@
             line-height: 30px;
             margin-left: 40px
         }
+        
+        #title {
+            margin-left: 50px
+        }
+        
+        #count {
+            margin-top: 10px;
+            margin-left: 50px
+        }
     </style>
 </head>
 
 <body ng-app="myapp" ng-controller="ft">
 
-    <div ui-view>
-        <h1>欢迎来到这个页面</h1>
-        <ul>
-            <li ng-repeat="item in data" ng-click="fn()">
-                <a ui-sref="content({ID:item.count})">{{item.title}}</a>
-            </li>
-        </ul>
+    <div ui-view></div>
+    <!--<footer>
+    </footer>-->
 
-    </div>
-    <!--<input type="text" name='ID' id='ID'>-->
-    <input type="text" name="title" id="title">
-    <input type="text" name="count" id="count">
-    <button id="add" ng-click="add()">添加</button>
+
+
 </body>
 <script src="js/angular.js"></script>
 <script src="js/angular-ui-router.js"></script>
@@ -75,46 +77,62 @@
 
 
     )
-
     app.config(function($stateProvider, $urlRouterProvider) {
-            $urlRouterProvider.otherwise("/index")
+            $urlRouterProvider.otherwise("/home")
             $stateProvider
-                .state("content", {
-                    "url": "/content",
+                .state("home", {
+                    "url": "/home",
+                    templateUrl: "view/home.html"
+                })
+                .state("list", {
+                    "url": "/list",
                     templateUrl: "view/list.html",
                     controller: function($scope, $stateParams) {
+
                         $scope.content = $stateParams.ID
+
+
                     },
                     params: {
                         ID: ""
                     }
                 })
 
+
         })
         //添加
-    $('#add').on('click', function() {
-            console.log(11)
-            var title = $('#title').val();
-            var count = $('#count').val();
-            var ID = $('#ID').val();
-            $.ajax({
-                url: '/add',
-                type: 'post',
-                data: {
-                    // ID: ID,
-                    title: title,
-                    count: count
-                },
-                success: function(msg) {
-                    if (msg.code == 0) {
-                        window.location.reload();
-                    }
+    app.directive("footer", function() {
+        return {
+            restrict: "EAC",
+            templateUrl: 'view/tab.html',
+            link: function(scope, ele, attr) {
+                // console.log(ele)
+                var title = document.getElementById("title"),
+                    count = document.getElementById("count"),
+                    add = document.getElementById("add")
+                add.onclick = function() {
+                    // console.log(11)
+                    var title = $('#title').val();
+                    var count = $('#count').val();
+                    // var ID = $('#ID').val();
+                    $.ajax({
+                        url: '/add',
+                        type: 'post',
+                        data: {
+                            // ID: ID,
+                            title: title,
+                            count: count
+                        },
+                        success: function(msg) {
+                            if (msg.code == 0) {
+                                window.location.reload();
+                            }
+                        }
+                    })
                 }
-            })
-        })
-        // app.run(function($routeScope) {
-
-    // })
+            }
+        }
+    })
 </script>
 
 </html>
