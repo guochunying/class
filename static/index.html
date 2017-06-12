@@ -51,8 +51,7 @@
 <body ng-app="myapp" ng-controller="ft">
 
     <div ui-view></div>
-    <!--<footer>
-    </footer>-->
+
 
 
 
@@ -71,12 +70,11 @@
                 $scope.data = res.results
                 console.log($scope.data)
 
-
             })
         }
 
-
     )
+
     app.config(function($stateProvider, $urlRouterProvider) {
             $urlRouterProvider.otherwise("/home")
             $stateProvider
@@ -87,14 +85,40 @@
                 .state("list", {
                     "url": "/list",
                     templateUrl: "view/list.html",
-                    controller: function($scope, $stateParams) {
+                    controller: function($scope, $stateParams, $http) {
 
                         $scope.content = $stateParams.ID
+                        $scope.count = Number($stateParams.total)
+                            // console.log($scope.content)
+                        $scope.id = $stateParams.id
 
+                        // console.log($scope.id)
+                        $scope.count++
+                            console.log($scope.count)
+                        $http({
+                                url: "/update",
+                                method: "post",
+                                data: {
+                                    ID: $scope.content,
+                                    num: $scope.count
+                                },
+                                headers: {
+                                    'Content-Type': "list/html"
+                                }
+                            }).success(function(data) {
+
+                            })
+                            //         success: function (msg) {
+                            //         if (msg.code == 0) {
+                            //         	window.location.reload();
+                            //         }
+                            // }
 
                     },
                     params: {
-                        ID: ""
+                        ID: "",
+                        total: "",
+                        id: ""
                     }
                 })
 
