@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <style>
+        h1 {
+            font-size: 28px;
+            height: 50px;
+            line-height: 50px;
+            color: #fff;
+            background: skyblue;
+            width: 100%;
+            text-align: center
+        }
+        
+        ul li {
+            list-style: none;
+            line-height: 50px;
+            margin-left: 20px;
+            border-bottom: 1px solid #ccc;
+            line-height: 50px;
+            text-align: center
+        }
+        
+        a {
+            text-decoration: none
+        }
+        
+        p {
+            width: 50%;
+            text-align: center;
+            line-height: 30px;
+            margin-left: 40px
+        }
+    </style>
+</head>
+
+<body ng-app="myapp" ng-controller="ft">
+
+    <div ui-view>
+        <h1>欢迎来到这个页面</h1>
+        <ul>
+            <li ng-repeat="item in data" ng-click="fn()">
+                <a ui-sref="content({ID:item.count})">{{item.title}}</a>
+            </li>
+        </ul>
+
+    </div>
+    <!--<input type="text" name='ID' id='ID'>-->
+    <input type="text" name="title" id="title">
+    <input type="text" name="count" id="count">
+    <button id="add" ng-click="add()">添加</button>
+</body>
+<script src="js/angular.js"></script>
+<script src="js/angular-ui-router.js"></script>
+<script src="js/jquery.js"></script>
+<script>
+    var app = angular.module("myapp", ["ui.router"])
+
+    app.controller("ft", function($scope, $http) {
+            $http({
+                url: "/foot",
+                method: "get"
+            }).success(function(res) {
+                $scope.data = res.results
+                console.log($scope.data)
+
+
+            })
+        }
+
+
+    )
+
+    app.config(function($stateProvider, $urlRouterProvider) {
+            $urlRouterProvider.otherwise("/index")
+            $stateProvider
+                .state("content", {
+                    "url": "/content",
+                    templateUrl: "view/list.html",
+                    controller: function($scope, $stateParams) {
+                        $scope.content = $stateParams.ID
+                    },
+                    params: {
+                        ID: ""
+                    }
+                })
+
+        })
+        //添加
+    $('#add').on('click', function() {
+            console.log(11)
+            var title = $('#title').val();
+            var count = $('#count').val();
+            var ID = $('#ID').val();
+            $.ajax({
+                url: '/add',
+                type: 'post',
+                data: {
+                    // ID: ID,
+                    title: title,
+                    count: count
+                },
+                success: function(msg) {
+                    if (msg.code == 0) {
+                        window.location.reload();
+                    }
+                }
+            })
+        })
+        // app.run(function($routeScope) {
+
+    // })
+</script>
+
+</html>
